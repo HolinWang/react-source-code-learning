@@ -104,3 +104,12 @@ pTextNode.nodeValue = pTextElement.props.nodeValue;
 pDom.appendChild(pTextNode);
 
 console.log(dom);
+
+
+/**
+ * 以上已经实现了这个复杂的虚拟DOM结构的创建和渲染，但是存在不足：
+ * 1. 渲染过程过于繁琐，每次都需要手动创建DOM节点并设置属性
+ * 2. 代码重复度高，缺乏通用性
+ * 
+ * 下一步可以考虑实现一个通用的渲染函数，将虚拟DOM转换为真实DOM，从而简化渲染过程
+ */

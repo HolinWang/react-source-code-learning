@@ -45,3 +45,14 @@ textNode.nodeValue = element.props.children[0].props.nodeValue;
 dom.appendChild(textNode);
 
 console.log(dom);
+
+/**
+ * 以上代码实现了一个最简单的 Mini React V2，包含以下几个步骤：
+ * 1. 创建文本虚拟DOM元素对象 textElement。
+ * 2. 创建div虚拟DOM元素对象 element，并将文本虚拟DOM作为其子节点。
+ * 3. 根据虚拟DOM对象创建真实DOM节点并渲染到页面上，最终在页面上显示出“Hello Mini React V2”文本。
+ * 
+ * 注意：当前实现方式是手动创建虚拟DOM元素对象，然后根据这个对象创建真实DOM并渲染到页面上，数据是写死的，后续版本会逐步完善这个过程，实现更通用的虚拟DOM创建和渲染机制。
+ * 
+ * 但是存在的问题是：代码写死了，不能动态创建虚拟DOM元素对象，后续版本会改进这个问题。
+ */

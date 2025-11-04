@@ -60,3 +60,17 @@ textNode.nodeValue = textNodeElement.props.nodeValue;
 dom.append(textNode);
 
 console.log(dom);
+
+/**
+ * 以上代码实现了一个简单的虚拟DOM创建和渲染过程，包含以下几个步骤：
+ * 1. 创建文本虚拟DOM元素的函数 createTextNodeElement。
+ * 2. 创建普通虚拟DOM元素的函数 createElement。
+ * 3. 使用这两个函数创建一个包含文本节点的div虚拟DOM结构。
+ * 4. 将虚拟DOM渲染到真实的DOM中，最终在页面上显示 "Hello Mini React V3"。
+ * 
+ * 但是存在不足之处：
+ * - 只能创建单一文本节点作为子节点，无法创建复杂的嵌套结构。
+ * - 渲染过程较为简单，未考虑属性设置和事件绑定等复杂情况。
+ * 
+ * 未来可以在此基础上进行改进，支持更多类型的子节点和更复杂的渲染逻辑。
+ */
