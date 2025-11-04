@@ -10,16 +10,19 @@
         position: fixed;
         right: 0;
         top: 0;
-        width: 360px;
+        min-width: 360px;
+        max-width: 80vw;
         height: 100vh;
         background: #1e1e1e;
         padding: 20px;
         font-family: 'JetBrains Mono', 'Monaco', monospace;
         font-size: 13px;
         line-height: 1.5;
-        overflow: auto;
+        overflow-y: auto;
+        overflow-x: hidden;
         color: #d4d4d4;
         box-shadow: -3px 0 15px rgba(0,0,0,0.3);
+        white-space: nowrap;
       }
       #dom-inspector .title {
         font-size: 15px;
@@ -36,6 +39,8 @@
         border-radius: 3px;
         transition: all 0.2s ease;
         position: relative;
+        white-space: nowrap;
+        overflow-x: visible;
       }
       .tree-node:hover {
         background-color: #252525;
@@ -115,7 +120,7 @@
       <div class="title">DOM Structure</div>
       <div id="dom-tree"></div>
     </div>
-    <script type="module" src="./src/mini-react-v4/index.js"></script>
+    <script type="module" src="./src/mini-react-v5/index.js"></script>
     <script>
       function showDOMStructure() {
         const domTree = document.getElementById('dom-tree');
