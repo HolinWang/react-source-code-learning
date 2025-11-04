@@ -44,4 +44,4 @@ const textNode = document.createTextNode('');
 textNode.nodeValue = element.props.children[0].props.nodeValue;
 dom.appendChild(textNode);
 
-console.log(dom)
+console.log(dom);

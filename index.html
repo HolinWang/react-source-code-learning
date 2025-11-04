@@ -5,9 +5,193 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>react-source-code-learning</title>
+    <style>
+      #dom-inspector {
+        position: fixed;
+        right: 0;
+        top: 0;
+        width: 360px;
+        height: 100vh;
+        background: #1e1e1e;
+        padding: 20px;
+        font-family: 'JetBrains Mono', 'Monaco', monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        overflow: auto;
+        color: #d4d4d4;
+        box-shadow: -3px 0 15px rgba(0,0,0,0.3);
+      }
+      #dom-inspector .title {
+        font-size: 15px;
+        color: #569cd6;
+        margin-bottom: 16px;
+        border-bottom: 2px solid #333;
+        padding-bottom: 10px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+      }
+      .tree-node {
+        margin: 3px 0;
+        padding: 6px 8px;
+        border-radius: 3px;
+        transition: all 0.2s ease;
+        position: relative;
+      }
+      .tree-node:hover {
+        background-color: #252525;
+      }
+      .level-number {
+        display: inline-block;
+        min-width: 28px;
+        font-size: 11px;
+        color: #858585;
+        font-weight: 500;
+        position: relative;
+        top: -1px;
+      }
+      .level-number::before {
+        content: '[';
+        color: #4a4a4a;
+      }
+      .level-number::after {
+        content: ']';
+        color: #4a4a4a;
+      }
+      .tree-content {
+        color: #4ec9b0; /* 标签颜色 */
+      }
+      .text-content {
+        font-style: italic;
+      }
+      .text-content .text {
+        color: #ce9178; /* 文本内容颜色 */
+      }
+      .tree-content .id {
+        color: #9cdcfe; /* ID颜色 */
+      }
+      .tree-content .class {
+        color: #ce9178; /* 类名颜色 */
+      }
+      /* 使用更细腻的缩进 */
+      .depth-1 { margin-left: 15px; }
+      .depth-2 { margin-left: 30px; }
+      .depth-3 { margin-left: 45px; }
+      .depth-4 { margin-left: 60px; }
+      .depth-5 { margin-left: 75px; }
+      
+      /* 添加垂直连接线 */
+      .tree-node::before {
+        content: '';
+        position: absolute;
+        left: -10px;
+        top: 0;
+        height: 100%;
+        width: 1px;
+        background: #333;
+      }
+      .depth-1::before {
+        display: none;
+      }
+      
+      /* 滚动条美化 */
+      #dom-inspector::-webkit-scrollbar {
+        width: 8px;
+      }
+      #dom-inspector::-webkit-scrollbar-track {
+        background: #1e1e1e;
+      }
+      #dom-inspector::-webkit-scrollbar-thumb {
+        background: #424242;
+        border-radius: 4px;
+      }
+      #dom-inspector::-webkit-scrollbar-thumb:hover {
+        background: #4f4f4f;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="./src/mini-react-v2/index.js"></script>
+    <div id="dom-inspector">
+      <div class="title">DOM Structure</div>
+      <div id="dom-tree"></div>
+    </div>
+    <script type="module" src="./src/mini-react-v3/index.js"></script>
+    <script>
+      function showDOMStructure() {
+        const domTree = document.getElementById('dom-tree');
+        const root = document.getElementById('root');
+        let counter = 1;
+        
+        function formatNumber(num) {
+          return num.toString().padStart(2, '0');
+        }
+        
+        function displayNode(node) {
+          if (node.nodeType === Node.TEXT_NODE) {
+            const text = node.textContent.trim();
+            if (text) {
+              return `<span class="text">"${text}"</span>`;
+            }
+            return null;
+          }
+          
+          let result = node.tagName.toLowerCase();
+          if (node.id) result = result + ' <span class="id">#' + node.id + '</span>';
+          if (node.className) {
+            const classes = node.className.split(' ')
+              .filter(c => c)
+              .map(c => '<span class="class">.' + c + '</span>')
+              .join('');
+            result += ' ' + classes;
+          }
+          return result;
+        }
+        
+        function buildTree(node, depth = 1) {
+          // 跳过空文本节点
+          if (node.nodeType === Node.TEXT_NODE && !node.textContent.trim()) {
+            return null;
+          }
+          
+          const div = document.createElement('div');
+          div.className = `tree-node depth-${depth}`;
+          
+          const levelNumber = document.createElement('span');
+          levelNumber.className = 'level-number';
+          levelNumber.textContent = formatNumber(counter++);
+          
+          const content = document.createElement('span');
+          content.className = node.nodeType === Node.TEXT_NODE ? 'text-content' : 'tree-content';
+          const displayContent = displayNode(node);
+          if (!displayContent) return null;
+          content.innerHTML = displayContent;
+          
+          div.appendChild(levelNumber);
+          div.appendChild(content);
+          
+          // 遍历所有子节点，包括文本节点
+          const childNodes = Array.from(node.childNodes);
+          childNodes.forEach(child => {
+            const childTree = buildTree(child, depth + 1);
+            if (childTree) {
+              div.appendChild(childTree);
+            }
+          });
+          
+          return div;
+        }
+        
+        // 清空之前的内容
+        domTree.innerHTML = '';
+        // 添加新的DOM树
+        domTree.appendChild(buildTree(root));
+      }
+      
+      // 初始渲染
+      showDOMStructure();
+      
+      // 为了确保在React渲染后更新DOM结构，我们再次调用
+      setTimeout(showDOMStructure, 100);
+    </script>
   </body>
 </html>
