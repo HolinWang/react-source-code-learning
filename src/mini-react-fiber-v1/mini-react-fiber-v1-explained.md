@@ -1,10 +1,3 @@
-# mini-react-fiber-v1 深度学习笔记（面向初学者）
-
-此文档对应仓库路径：`src/mini-react-fiber-v1`。
-覆盖文件：
-- `index.js`
-- `createNestedFiberjs`
-
 目标：把 `mini-react-fiber-v1` 中的实现拆解成非常详细的学习笔记，包含每个函数的逐行解释、流程图（Mermaid 文本）、算法伪码、可能的坑与改进建议，确保小白也能循序渐进理解 fiber + time-slicing 的核心思想。
 
 ---
