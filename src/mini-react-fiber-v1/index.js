@@ -20,21 +20,21 @@
  * 2. 当渲染完一些dom之后没有可用时间了，如何保存当前的渲染状态，以便下次继续渲染？用户可能会看到页面卡顿之后会继续渲染。
  */
 
-import createNestedFibers from './createNestedFiberjs';
+import createNestedFibers from './createNestedFiber.js';
 /**
  * 根据fiber创建真实DOM节点，并设置属性；
  * 注意设置属性：排除children属性，因为children不是DOM节点的属性；
  * @param {*} fiber 
  * @returns 
  */
-function createDom(fiber){
-    const dom = fiber.type === 'TEXT_ELEMENT' 
-        ? document.createTextNode('') 
+function createDom(fiber) {
+    const dom = fiber.type === 'TEXT_ELEMENT'
+        ? document.createTextNode('')
         : document.createElement(fiber.type);
     return dom;
 }
 
-function updateProperties(dom,props){
+function updateProperties(dom, props) {
     // 设置属性
     const isProperty = key => key !== 'children';
     /**
@@ -77,7 +77,7 @@ function appendDomToContainer(domNode, parentFiber) {
  */
 function workLoop(deadline) {
     let shouldYield = false; // 是否需要让出时间片
-    while(!shouldYield){
+    while (!shouldYield) {
         console.log('deadline: ', deadline.timeRemaining());
         nextWorkOfUnit = performWorkOfUnit(nextWorkOfUnit);
         shouldYield = deadline.timeRemaining() < 1; // 如果空闲时间小于1ms，就需要让出时间片
@@ -95,10 +95,10 @@ function workLoop(deadline) {
  * @returns 
  */
 function performWorkOfUnit(fiber) {
-    if(!fiber) return null;
+    if (!fiber) return null;
 
     // 1. 创建dom节点
-    if(!fiber.dom){
+    if (!fiber.dom) {
         fiber.dom = createDom(fiber);
         updateProperties(fiber.dom, fiber.props);
     }
@@ -106,13 +106,13 @@ function performWorkOfUnit(fiber) {
     appendDomToContainer(fiber.dom, fiber.parent);
 
     // 3. 构建fiber树, 转换链表，建立关系， child, sibling, parent
-    if(fiber.child){
+    if (fiber.child) {
         return fiber.child;
     }
     // 如果没有子节点，找兄弟节点，没有兄弟节点就找父节点的兄弟节点，以此类推
     let nextFiber = fiber;
-    while(nextFiber){
-        if(nextFiber.sibling){
+    while (nextFiber) {
+        if (nextFiber.sibling) {
             return nextFiber.sibling;
         }
         nextFiber = nextFiber.parent;
