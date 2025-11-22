@@ -5,7 +5,7 @@
  * 计算结束之后统一添加到屏幕里面，而不是每次创建完dom节点就添加到屏幕里面
  */
 
-import createNestedFibers from './createNestedFiberjs';
+import createNestedFibers from './createNestedFiber.js';
 
 // 初始化下一个工作单元
 let nextWorkOfUnit = null;
