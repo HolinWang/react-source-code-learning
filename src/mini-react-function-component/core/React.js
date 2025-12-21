@@ -127,6 +127,9 @@ export function createElement(type, props, ...children) {
  */
 
 /**
+ * 
+ * performUnitOfWork是什么？主要功能是啥？
+ * performUnitOfWork是一个核心的渲染逻辑，用于处理单个工作单元（fiber 节点）。这个函数相当于一个递归函数，用于处理单个 fiber 节点。
 * 这是调度器在 render 阶段的核心步骤：针对当前的 fiber
  * 1. 确保真实 DOM 节点存在（若不存在则创建）
 * 2. 更新 DOM 属性（不包括 children）
@@ -155,10 +158,17 @@ function performUnitOfWork(fiber) {
     const childFromComponent = fiber.type(existingProps);
     // 把函数组件返回值包装进 props.children，不过不要直接修改原 props（可能不可扩展）。
     // 使用对象展开创建一个新的 props 对象，保证可扩展性和不修改原有对象。
-    fiber.props = Object.assign({}, existingProps, { children: childFromComponent ? [childFromComponent] : [] });
+    fiber.props = Object.assign(
+      {},
+      existingProps,
+      {
+        children: childFromComponent ? [childFromComponent] : []
+      }
+    );
     // Debug: log that a function component was processed and number of children
     console.log('Processed function component:', fiber.type.name || fiber.type, '-> children:', fiber.props.children);
   }
+
   if (!isFunctionComponent) {
     // 创建dom节点
     if (!fiber.dom) {
@@ -245,6 +255,12 @@ let nextWorkOfUnit = null;
 
 /**
  * 简易的工作循环占位实现；真实实现应包含 performUnitOfWork / commitRoot 等逻辑
+ * 工作循环需要做什么呢？
+ * 1. 获取当前空闲时间（deadline）
+ * 2. 持续执行 performUnitOfWork 直到没有工作单元或者需要让出时间片
+ * 3. 提交根节点到屏幕
+ * 4. 持续调度下次空闲回调
+ * @param {*} deadline
  */
 function workLoop(deadline) {
   let shouldYield = false;
